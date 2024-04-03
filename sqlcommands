@@ -1,0 +1,51 @@
+#Show the data
+Select * from ecommerce;
+
+#Get the total revenue for a specific date range:
+SELECT SUM(Quantity * UnitPrice) AS total_revenue
+FROM ecommerce
+WHERE Date BETWEEN '2022-01-01' AND '2022-12-31';
+
+#Get the top 5 best-selling products:
+SELECT StockCode, Description, SUM(Quantity) AS total_sold
+FROM ecommerce
+GROUP BY StockCode, Description
+ORDER BY total_sold DESC
+LIMIT 5;
+
+#Get the average order value by customer:
+SELECT CustomerID, AVG(Quantity * UnitPrice) AS avg_order_value
+FROM ecommerce
+GROUP BY CustomerID;
+
+#Get the number of customers who made repeat purchases:
+SELECT COUNT(*) AS repeat_customers
+FROM (
+    SELECT CustomerID
+    FROM ecommerce
+    GROUP BY CustomerID
+    HAVING COUNT(InvoiceNo) > 1
+) AS repeat_customers;
+
+#Get the total revenue by product description for a specific date range:
+SELECT Description, SUM(Quantity * UnitPrice) AS total_revenue
+FROM ecommerce
+WHERE Date BETWEEN '2010-01-01' AND '2011-10-14'
+GROUP BY Description
+ORDER BY total_revenue DESC;
+
+#Get the top 5 customers with the highest total spending:
+SELECT CustomerID, SUM(Quantity * UnitPrice) AS total_spending
+FROM ecommerce
+GROUP BY CustomerID
+ORDER BY total_spending DESC
+LIMIT 5;
+
+#Get the average revenue per customer for each month of the year:
+SELECT CustomerID
+FROM (
+    SELECT CustomerID, COUNT(DISTINCT Country) AS country_count
+    FROM ecommerce
+    GROUP BY CustomerID
+) c
+WHERE c.country_count < 5;
